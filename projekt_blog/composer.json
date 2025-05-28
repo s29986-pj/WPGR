@@ -1,0 +1,26 @@
+{
+    "name": "s29986/projekt_blog",
+    "description": "Simple blog project for university using pure PHP.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "s29986",
+            "email": "s29986@pjwstk.edu.pl"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "phpmailer/phpmailer": "^6.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "phpmailer/phpmailer": true
+        }
+    }
+}
