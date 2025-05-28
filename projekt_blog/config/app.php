@@ -24,6 +24,6 @@ define('UPLOAD_DIR', __DIR__ . '/../public/uploads/images/');
 define('LOG_DIR', __DIR__ . '/../logs/');
 
 // Nazwa aplikacji
-define('APP_NAME', 'Blog');
+define('APP_NAME', 'Projekt_Blog');
 
 ?>
