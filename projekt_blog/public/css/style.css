@@ -1,0 +1,191 @@
+/* Ogólne style dla body, czcionek itp. */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Style nagłówka */
+header {
+    background-color: #333;
+    color: white;
+    padding: 1em 0;
+}
+
+/* Styl dla kontenera nawigacji */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Style dla linków w nawigacji */
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5em 1em;
+    transition: background-color 0.3s ease;
+}
+
+nav a:hover {
+    background-color: #555;
+    border-radius: 4px;
+}
+
+/* Styl dla tekstu "Witaj, Użytkowniku!" */
+nav span {
+    color: white;
+    padding: 0.5em 1em;
+}
+
+/* Style dla lewej i prawej strony nawigacji */
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.nav-right a {
+    margin-left: 10px;
+}
+
+/* Główna sekcja treści */
+main {
+    flex-grow: 1;
+    padding: 20px;
+    min-width: 600px;
+    min-height: 400px; 
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0px 10px rgba(0,0,0,0.1);
+}
+
+/* Stopka */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1em 0;
+    margin-top: auto;
+}
+
+/* Styles dla formularzy */
+.form-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.form-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group button {
+    width: 100%;
+    padding: 10px;
+    background-color: #da2689;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.form-group button:hover {
+    background-color: #962a72;
+}
+
+/* Komunikaty o błędach i sukcesach */
+.error-message {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.success-message {
+    color: #28a745;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Linki w formularzu */
+.form-container p {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.form-container p a {
+    color: #da2689;
+    text-decoration: none;
+}
+
+.form-container p a:hover {
+    text-decoration: underline;
+}
+
+/* Checkbox "Zapamiętaj mnie" */
+.form-group.checkbox-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.form-group.checkbox-group input[type="checkbox"] {
+    width: auto;
+    margin-right: 5px;
+}
+
+/* Opcjonalne: Prosty styl dla linków do aktywacji/resetowania */
+.activation-link, .reset-link {
+    background-color: #e9ecef;
+    border: 1px dashed #ced4da;
+    padding: 10px;
+    margin-top: 15px;
+    word-break: break-all;
+}
