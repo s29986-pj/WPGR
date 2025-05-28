@@ -4,20 +4,25 @@ namespace App\Core;
 
 class Router
 {
-    private $routes = [];
+    // Osobne ścieżki dla GET i POST
+    private $routes = [
+        'GET' => [],
+        'POST' => []
+    ];
 
     // Dodaje nowe ścieżki
-    public function add(string $uri, callable $callback)
+    public function add(string $uri, callable $callback, string $method = 'GET')
     {
-        $this->routes[$uri] = $callback;
+        $method = strtoupper($method);
+        $this->routes[$method][$uri] = $callback;
     }
 
     // Dopasowuje adres URL do ścieżki
     public function dispatch()
     {
         $requestUri = $_SERVER['REQUEST_URI']; // Pełny adres URL żądany przez przeglądarkę
-
         $scriptName = $_SERVER['SCRIPT_NAME']; // Ścieżka do pliku index.php
+        $requestMethod = $_SERVER['REQUEST_METHOD']; // Metoda żądania
 
         // Ścieżka bazowa
         $basePath = str_replace('\\', '/', dirname($scriptName));
@@ -39,9 +44,9 @@ class Router
             $uri = '/';
         }
 
-        // Sprawdzanie, czy dana ścieżka istnieje
-        if (array_key_exists($uri, $this->routes)) {
-            call_user_func($this->routes[$uri]);
+        // Sprawdzanie, czy dana ścieżka istnieje dla danej metody
+        if (isset($this->routes[$requestMethod]) && array_key_exists($uri, $this->routes[$requestMethod])) {
+            call_user_func($this->routes[$requestMethod][$uri]);
         } else {
             header("HTTP/1.0 404 Not Found");
             echo "<h1>404 Not Found</h1><p>Strona nie istnieje.</p>";
