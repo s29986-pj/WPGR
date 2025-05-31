@@ -39,6 +39,16 @@ class User
         return $result->fetch_assoc();
     }
 
+    // Znajduje użytkownika po nazwie
+    public function findByUsername(string $username): ?array
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
+
     // Znajduje użytkownika po tokenie weryfikacyjnym
     public function findByVerificationToken(string $token): ?array
     {
