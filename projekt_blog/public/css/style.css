@@ -10,12 +10,16 @@ body {
     min-height: 100vh;
 }
 
+
+
 /* Style nagłówka */
 header {
     background-color: #333;
     color: white;
     padding: 1em 0;
 }
+
+
 
 /* Styl dla kontenera nawigacji */
 nav {
@@ -56,6 +60,8 @@ nav span {
     margin-left: 10px;
 }
 
+
+
 /* Główna sekcja treści */
 main {
     flex-grow: 1;
@@ -68,6 +74,8 @@ main {
     box-shadow: 0 0px 10px rgba(0,0,0,0.1);
 }
 
+
+
 /* Stopka */
 footer {
     background-color: #333;
@@ -77,7 +85,9 @@ footer {
     margin-top: auto;
 }
 
-/* Styles dla formularzy */
+
+
+/* Style dla formularzy */
 .form-container {
     max-width: 600px;
     margin: 50px auto;
@@ -131,6 +141,18 @@ footer {
     background-color: #962a72;
 }
 
+textarea {
+    width: 100%; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 150px; 
+    font-family: inherit;
+    font-size: 1em;
+}
+
 /* Komunikaty o błędach i sukcesach */
 .error-message {
     color: #dc3545;
@@ -158,13 +180,9 @@ footer {
     margin-top: 20px;
 }
 
-.form-container p a {
+.form-container p a{
     color: #da2689;
     text-decoration: none;
-}
-
-.form-container p a:hover {
-    text-decoration: underline;
 }
 
 /* Checkbox "Zapamiętaj mnie" */
@@ -181,11 +199,191 @@ footer {
     margin-right: 5px;
 }
 
-/* Opcjonalne: Prosty styl dla linków do aktywacji/resetowania */
+/* Styl dla linków do aktywacji/resetowania */
 .activation-link, .reset-link {
     background-color: #e9ecef;
     border: 1px dashed #ced4da;
     padding: 10px;
     margin-top: 15px;
     word-break: break-all;
+}
+
+
+
+/* Style specyficzne dla pojedynczego posta */
+.single-post-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.single-post-container h1 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.single-post-container a {
+    color: #da2689;
+    text-decoration: none;
+}
+
+.single-post-container a:hover{
+    text-decoration: none;
+}
+
+.post-full-content {
+    line-height: 1.8;
+    color: #333;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.post-actions-single {
+    margin-top: 30px;
+    text-align: right;
+}
+
+.post-actions-single .button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    font-size: 0.9em;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.post-actions-single .edit-button {
+    background-color: #da2689;
+}
+
+.post-actions-single .edit-button:hover {
+    background-color: #962a72;
+}
+
+.post-actions-single .delete-button {
+    background-color: #dc3545;
+}
+
+.post-actions-single .delete-button:hover {
+    background-color: #c82333;
+}
+
+
+
+/* Style specyficzne dla listy postów */
+.posts-list-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.add-post-link {
+    text-align: right;
+    margin-bottom: 20px;
+}
+.add-post-link a {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+.add-post-link a:hover {
+    background-color: #218838;
+}
+
+.post-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.post-item h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #da2689;
+}
+
+.post-item h2 a {
+    text-decoration: none;
+    color: #da2689;
+}
+
+.post-meta {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.post-content-excerpt {
+    line-height: 1.6;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+.post-actions {
+    text-align: right;
+    margin-top: 15px;
+}
+
+.post-actions .button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    font-size: 0.9em;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.post-actions .edit-button {
+    background-color: #da2689;
+}
+
+.post-actions .edit-button:hover {
+    background-color: #962a72;
+}
+
+.post-actions .delete-button {
+    background-color: #dc3545;
+}
+
+.post-actions .delete-button:hover {
+    background-color: #c82333;
+}
+
+.pagination {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #007bff;
+    background-color: #f8f9fa;
+}
+
+.pagination a.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #e2e6ea;
 }
