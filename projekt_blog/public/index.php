@@ -20,15 +20,18 @@ define('BASE_PATH', $basePath);
 use App\Core\Router;
 use function App\Utils\view;
 use App\Controllers\AuthController;
+use App\Controllers\PostController;
 
 $router = new Router();
 $authController = new AuthController();
+$postController = new PostController();
 
 
 // Strona główna
-$router->add('/', function() {
-    view('home', ['pageTitle' => 'Strona główna']);
-});
+$router->add('/', [$postController, 'index']); 
+
+
+
 
 
 // Strona rejestracji
@@ -63,14 +66,34 @@ $router->add('/reset-password', function() {
     $token = $_GET['token'] ?? '';
     if (empty($token)) {
         // Jeśli brak tokena, przekierowuje na stronę "zapomniałem hasła".
-        $basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
-        $basePath = rtrim($basePath, '/');
-        header("Location: " . $basePath . "/forgot-password");
+        header("Location: " . BASE_PATH . "/forgot-password");
         exit();
     }
     view('auth/reset_password', ['pageTitle' => 'Ustaw nowe hasło', 'token' => $token]);
 });// GET - wyświetl formularz
 $router->add('/reset-password', [$authController, 'resetPassword'], 'POST');// POST - obsłuż reset
+
+
+
+
+
+// Dodawanie posta
+$router->add('/posts/create', [$postController, 'createForm']);
+$router->add('/posts/create', [$postController, 'store'], 'POST');
+
+
+// Wyświetl pojedynczy post
+// ':id' to placeholder, który zostanie przekazany do metody show() w $params['id']
+$router->add('/posts/:id', [$postController, 'show']);
+
+
+// Edycja posta
+$router->add('/posts/:id/edit', [$postController, 'editForm']);
+$router->add('/posts/:id/edit', [$postController, 'update'], 'POST');
+
+
+// Usuwanie posta
+$router->add('/posts/:id/delete', [$postController, 'delete'], 'POST');
 
 
 
