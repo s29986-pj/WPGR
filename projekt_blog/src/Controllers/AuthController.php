@@ -35,6 +35,8 @@ class AuthController
                 $error = "Nieprawidłowy format e-maila.";
             } elseif ($password !== $password_confirm) {
                 $error = "Hasła nie są zgodne.";
+            } elseif ($this->userModel->findByUsername($username)) {
+                $error = "Nazwa użytkownika jest już zajęta.";
             } elseif ($this->userModel->findByEmail($email)) {
                 $error = "Użytkownik o tym adresie e-mail już istnieje.";
             }
@@ -71,10 +73,11 @@ class AuthController
 
                 // Wysyła e-mail aktywacyjny
                 if ($this->mailer->sendEmail($email, $subject, $body)) {
-                    $success = "Konto zostało utworzone. Sprawdź swoją skrzynkę e-mail, aby aktywować konto.";
+                    header("Location: " . BASE_PATH . "/login?status=registered_email_sent");
+                    exit();
                 } else {
-                    $error = "Konto zostało utworzone, ale nie udało się wysłać e-maila weryfikacyjnego. Spróbuj później.";
-                    error_log("Failed to send verification email to " . $email);
+                    header("Location: " . BASE_PATH . "/login?status=registered_email_fail");
+                    exit();
                 }
             } else {
                 $error = "Wystąpił błąd podczas tworzenia konta. Spróbuj ponownie.";
@@ -140,11 +143,11 @@ class AuthController
             }
 
             // Przekierowuje na stronę główną
-            header("Location: " . BASE_PATH . "/");
+            header("Location: " . BASE_PATH . "/?status=logged_in");
             exit();
         }
 
-        // Nie powinno się uruchamiać, ale na wszelki wypadek zostawiam
+        // Pierwsze wejście na stronę logowania
         view('auth/login', ['pageTitle' => 'Logowanie']);
     }
 
@@ -158,7 +161,7 @@ class AuthController
         setcookie('remember_me', '', time() - 3600, '/');
 
         // Przekierowuje na stronę główną.
-        header("Location: " . BASE_PATH . "/");
+        header("Location: " . BASE_PATH . "/login?status=logged_out");
         exit();
     }
 
@@ -177,7 +180,7 @@ class AuthController
                 $error = "Nieprawidłowy lub wygasły token weryfikacyjny.";
             } elseif ($this->userModel->activateUser($user['id'])) {
                 $success = "Twoje konto zostało pomyślnie aktywowane! Możesz się teraz zalogować.";
-                header("Location: " . BASE_PATH. "/login?status=" . urlencode($success));
+                header("Location: " . BASE_PATH. "/login?status=activated");
                 exit();
             } else {
                 $error = "Wystąpił błąd podczas aktywacji konta. Spróbuj ponownie.";
@@ -198,7 +201,6 @@ class AuthController
             $email = $_POST['email'] ?? '';
 
             $error = null;
-            $success = null;
 
             if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $error = "Wprowadź prawidłowy adres e-mail.";
@@ -223,27 +225,31 @@ class AuthController
                               . "Pozdrawiamy,<br>Zespół " . APP_NAME;
 
                         if ($this->mailer->sendEmail($email, $subject, $body)) {
-                            $success = "Link do resetowania hasła został wysłany na Twój adres e-mail.";
+                            header("Location: " . BASE_PATH . "/forgot-password?status=reset_link_sent");
+                            exit();
                         } else {
-                            $error = "Wystąpił błąd podczas wysyłki linku resetującego. Spróbuj później.";
-                            error_log("Failed to send password reset email to " . $email);
+                            header("Location: " . BASE_PATH . "/forgot-password?status=reset_link_fail");
+                            exit();
                         }
                     } else {
                         $error = "Wystąpił błąd podczas generowania tokena resetującego. Spróbuj ponownie.";
                     }
                 } else {
-
-                    $success = "Jeśli podany adres e-mail istnieje w naszej bazie, link do resetowania hasła został wysłany.";
+                    header("Location: " . BASE_PATH . "/forgot-password?status=reset_link_sent_if_exists");
+                    exit();
                 }
             }
 
             view('auth/forgot_password', [
                 'pageTitle' => 'Resetowanie hasła',
                 'error' => $error,
-                'success' => $success,
                 'email' => $email
             ]);
+            return;
         }
+
+        // Pierwsze wejście na stronę
+        view('auth/forgot_password', ['pageTitle' => 'Resetowanie hasła']);
     }
 
     public function resetPassword()
@@ -254,7 +260,6 @@ class AuthController
             $password_confirm = $_POST['password_confirm'] ?? '';
 
             $error = null;
-            $success = null;
 
             if (empty($token) || empty($password) || empty($password_confirm)) {
                 $error = "Wszystkie pola są wymagane.";
@@ -272,19 +277,21 @@ class AuthController
                     // Aktualizacja hasła
                     if ($this->userModel->updatePassword($user['id'], $newPasswordHash)) {
                         $success = "Twoje hasło zostało pomyślnie zresetowane. Możesz się teraz zalogować.";
-                        header("Location: " . BASE_PATH . "/login?status=" . urlencode($success));
+                        header("Location: " . BASE_PATH . "/login?status=password_reset_success");
                         exit();
                     } else {
                         $error = "Wystąpił błąd podczas resetowania hasła. Spróbuj ponownie.";
                     }
                 }
             }
+
+            // Jeśli błąd walidacji lub resetowania, wyświetla formularz z błędem
             view('auth/reset_password', [
                 'pageTitle' => 'Ustaw nowe hasło',
                 'error' => $error,
-                'success' => $success,
                 'token' => $token
             ]);
+            return;
         }
     }
 }
