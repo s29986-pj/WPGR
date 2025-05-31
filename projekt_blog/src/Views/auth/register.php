@@ -1,12 +1,9 @@
 <div class="form-container">
     <h2>Rejestracja</h2>
 
-    <?php if (isset($error)): ?>
+    <?php
+    if (isset($error) && !empty($error)): ?>
         <p class="error-message"><?php echo htmlspecialchars($error); ?></p>
-    <?php endif; ?>
-
-    <?php if (isset($success)): ?>
-        <p class="success-message"><?php echo htmlspecialchars($success); ?></p>
     <?php endif; ?>
 
     <form action="<?php echo BASE_PATH ?>/register" method="POST">

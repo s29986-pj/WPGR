@@ -2,12 +2,9 @@
     <h2>Resetowanie hasła</h2>
     <p>Wprowadź swój adres e-mail, aby otrzymać link do zresetowania hasła.</p>
 
-    <?php if (isset($error)): ?>
+    <?php
+    if (isset($error) && !empty($error)): ?>
         <p class="error-message"><?php echo htmlspecialchars($error); ?></p>
-    <?php endif; ?>
-
-    <?php if (isset($success)): ?>
-        <p class="success-message"><?php echo htmlspecialchars($success); ?></p>
     <?php endif; ?>
 
     <form action="<?php echo BASE_PATH ?>/forgot-password" method="POST">

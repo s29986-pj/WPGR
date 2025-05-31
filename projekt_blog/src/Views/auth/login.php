@@ -2,12 +2,7 @@
     <h2>Logowanie</h2>
 
     <?php
-    $status_message = $_GET['status'] ?? '';
-    if (!empty($status_message)): ?>
-        <p class="success-message"><?php echo htmlspecialchars($status_message); ?></p>
-    <?php endif; ?>
-
-    <?php if (isset($error)): ?>
+    if (isset($error) && !empty($error)): ?>
         <p class="error-message"><?php echo htmlspecialchars($error); ?></p>
     <?php endif; ?>
 
