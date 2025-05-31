@@ -11,8 +11,12 @@ class Router
     ];
 
     // Dodaje nowe ścieżki
-    public function add(string $uri, callable $callback, string $method = 'GET')
+    public function add(string $uri, callable|array $callback, string $method = 'GET')
     {
+        $uri = '/' . trim($uri, '/');
+        if ($uri === '//') {
+            $uri = '/';
+        }
         $method = strtoupper($method);
         $this->routes[$method][$uri] = $callback;
     }
@@ -20,36 +24,59 @@ class Router
     // Dopasowuje adres URL do ścieżki
     public function dispatch()
     {
-        $requestUri = $_SERVER['REQUEST_URI']; // Pełny adres URL żądany przez przeglądarkę
-        $scriptName = $_SERVER['SCRIPT_NAME']; // Ścieżka do pliku index.php
-        $requestMethod = $_SERVER['REQUEST_METHOD']; // Metoda żądania
+        // Pobierz i oczyść URI z REQUEST_URI
+        $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $basePath = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
 
-        // Ścieżka bazowa
-        $basePath = str_replace('\\', '/', dirname($scriptName));
-        $basePath = rtrim($basePath, '/');
-
-        // Odcinanie $basePath od $requestUri, żeby została tylko czysta ścieżka
-        if (strpos($requestUri, $basePath) === 0) {
+        // Usuń BASE_PATH z Request URI
+        if (str_starts_with($requestUri, $basePath)) {
             $uri = substr($requestUri, strlen($basePath));
         } else {
             $uri = $requestUri;
         }
 
-        // Czyszczenie ścieżki ze zbędnych znaków
-        $uri = strtok($uri, '?');
-        $uri = rtrim($uri, '/');
-
-        // Wejście na stroną główną z folderu /public
-        if (empty($uri)) {
+        $uri = '/' . trim($uri, '/');
+        if ($uri === '//') {
             $uri = '/';
         }
 
-        // Sprawdzanie, czy dana ścieżka istnieje dla danej metody
-        if (isset($this->routes[$requestMethod]) && array_key_exists($uri, $this->routes[$requestMethod])) {
-            call_user_func($this->routes[$requestMethod][$uri]);
-        } else {
-            header("HTTP/1.0 404 Not Found");
-            echo "<h1>404 Not Found</h1><p>Strona nie istnieje.</p>";
+        $method = strtoupper($_SERVER['REQUEST_METHOD']);
+
+        // Sprawdza, czy ścieżka istnieje dla danej metody
+        if (isset($this->routes[$method])) {
+            foreach ($this->routes[$method] as $routeUri => $callback) {
+                $pattern = preg_replace('/:[a-zA-Z0-9_]+/', '([a-zA-Z0-9_]+)', $routeUri);
+                $pattern = '#^' . $pattern . '$#';
+
+                if (preg_match($pattern, $uri, $matches)) {
+                    array_shift($matches); // Usuwa pełne dopasowanie
+
+                    // Wydobywa nazwy parametrów z routeUri
+                    $paramNames = [];
+                    preg_match_all('/:([a-zA-Z0-9_]+)/', $routeUri, $paramNames);
+                    
+                    $params = [];
+                    if (!empty($paramNames[1])) {
+                        foreach ($paramNames[1] as $index => $name) {
+                            if (isset($matches[$index])) {
+                                $params[$name] = $matches[$index];
+                            }
+                        }
+                    }
+
+                    // Przekazuje parametry i wywołuje callback
+                    if (is_array($callback) && count($callback) == 2 && is_object($callback[0])) {
+                        call_user_func_array([$callback[0], $callback[1]], [$params]);
+                    } elseif (is_callable($callback)) {
+                        call_user_func_array($callback, [$params]);
+                    }
+                    return;
+                }
+            }
         }
+        // Wyrzuca 404 gdy nie znajdzie ścieżki
+        header("HTTP/1.0 404 Not Found");
+        echo "<h1>404 Not Found</h1>";
+        echo "<p>Strona nie została znaleziona.</p>";
     }
 }
