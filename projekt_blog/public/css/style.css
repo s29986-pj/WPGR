@@ -153,27 +153,6 @@ textarea {
     font-size: 1em;
 }
 
-/* Komunikaty o błędach i sukcesach */
-.error-message {
-    color: #dc3545;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.success-message {
-    color: #28a745;
-    background-color: #d4edda;
-    border: 1px solid #c3e6cb;
-    padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
 /* Linki w formularzu */
 .form-container p {
     text-align: center;
@@ -206,6 +185,29 @@ textarea {
     padding: 10px;
     margin-top: 15px;
     word-break: break-all;
+}
+
+
+
+/* Komunikaty o błędach i sukcesach */
+.error-message {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.success-message {
+    color: #28a745;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
 }
 
 
@@ -386,4 +388,25 @@ textarea {
 
 .pagination a:hover:not(.active) {
     background-color: #e2e6ea;
+}
+
+
+/* Style dla komentarzy */
+.comments-section {
+    margin-top: 40px;
+}
+
+.comment-form-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.comment-item {
+    background-color: #fff;
+    border: 1px solid #eee;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
 }
