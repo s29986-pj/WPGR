@@ -1,4 +1,16 @@
 <?php
+// Lista statusów, które oznaczają błąd i powinny mieć czerwoną stylizację
+$errorStatusCodes = [
+    'registered_email_fail',
+    'not_logged_in_post',
+    'not_logged_in_post_edit',
+    'invalid_reset_token',
+    'reset_link_fail',
+    'email_verification_error',
+    'delete_error',
+    'comment_error'
+];
+
 // Mapowanie kodów statusu na wiadomości
 $statusMessages = [
     // Statusy z AuthController
@@ -21,16 +33,21 @@ $statusMessages = [
     'updated' => 'Post został zaktualizowany pomyślnie.',
     'deleted' => 'Post został usunięty pomyślnie.',
     'delete_error' => 'Wystąpił błąd podczas usuwania posta.',
-
-    
+    'comment_added' => 'Komentarz został dodany pomyślnie.',
+    'comment_error' => 'Wystąpił błąd podczas dodawania komentarza.'   
 ];
 
 // Pobieranie kodu statusu z URL-a
 $status_code = $_GET['status'] ?? '';
 $display_status_message = '';
+$message_class = 'success-message';
 
 if (!empty($status_code) && isset($statusMessages[$status_code])) {
     $display_status_message = $statusMessages[$status_code];
+
+    if (in_array($status_code, $errorStatusCodes)) {
+        $message_class = 'error-message';
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -61,7 +78,7 @@ if (!empty($status_code) && isset($statusMessages[$status_code])) {
 
     <main>
         <?php if (!empty($display_status_message)): ?>
-            <p class="status-message success-message"><?php echo htmlspecialchars($display_status_message); ?></p>
+            <p class="status-message <?php echo $message_class; ?>"><?php echo htmlspecialchars($display_status_message); ?></p>
         <?php endif; ?>
 
         <?php
