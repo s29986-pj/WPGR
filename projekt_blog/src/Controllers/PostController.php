@@ -3,15 +3,18 @@
 namespace App\Controllers;
 
 use App\Models\Post;
+use App\Models\Comment;
 use function App\Utils\view;
 
 class PostController
 {
     private $postModel;
+    private $commentModel;
 
     public function __construct()
     {
         $this->postModel = new Post();
+        $this->commentModel = new Comment();
     }
 
 
@@ -52,9 +55,12 @@ class PostController
             exit();
         }
 
+        $comments = $this->commentModel->findByPostId($id); 
+
         view('posts/show', [
             'pageTitle' => $post['title'],
-            'post' => $post
+            'post' => $post,
+            'comments' => $comments
         ]);
     }
 
@@ -226,6 +232,42 @@ class PostController
             exit();
         } else {
             header('Location: ' . BASE_PATH . '/posts/' . $id . '?status=delete_error');
+            exit();
+        }
+    }
+
+
+    // Obsługuje dodawanie nowego komentarza
+    public function addComment(array $params)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_PATH . '/');
+            exit();
+        }
+
+        $postId = $params['id'] ?? null;
+        $content = $_POST['content'] ?? '';
+        $userId = $_SESSION['user_id'] ?? null;
+        $authorName = null;
+
+        // Prosta walidacja
+        if (!$postId || empty($content)) {
+            header('Location: ' . BASE_PATH . '/posts/' . $postId . '?status=comment_error');
+            exit();
+        }
+
+        // Ustawienie nazwy autora na "Gość" jeśli jest pusta i użytkownik nie jest zalogowany
+        if ($userId === null) {
+            $authorName = "Gość";
+        } else {
+            $authorName = $_SESSION['username'];
+        }
+
+        if ($this->commentModel->create((int)$postId, $content, $userId, $authorName)) {
+            header('Location: ' . BASE_PATH . '/posts/' . $postId . '?status=comment_added#comments');
+            exit();
+        } else {
+            header('Location: ' . BASE_PATH . '/posts/' . $postId . '?status=comment_error');
             exit();
         }
     }

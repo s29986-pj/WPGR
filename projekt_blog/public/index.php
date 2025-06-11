@@ -96,6 +96,10 @@ $router->add('/posts/:id/edit', [$postController, 'update'], 'POST');
 $router->add('/posts/:id/delete', [$postController, 'delete'], 'POST');
 
 
+// Dodawanie komentarza
+$router->add('/posts/:id/comments', [$postController, 'addComment'], 'POST');
+
+
 
 // Uruchomienie routera
 $router->dispatch();
