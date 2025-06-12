@@ -36,10 +36,10 @@ class Post
 
 
     // Dodaje nowy post do bazy danych
-    public function createPost(int $userId, string $title, string $content)
+    public function createPost(int $userId, string $title, string $content, ?string $imagePath)
     {
-        $stmt = $this->db->prepare("INSERT INTO posts (user_id, title, content) VALUES (?, ?, ?)");
-        $stmt->bind_param("iss", $userId, $title, $content);
+        $stmt = $this->db->prepare("INSERT INTO posts (user_id, title, content, image_path) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("isss", $userId, $title, $content, $imagePath);
         if ($stmt->execute()) {
             return $this->db->insert_id;
         }
@@ -48,10 +48,16 @@ class Post
 
 
     // Aktualizuje istniejący post
-    public function updatePost(int $id, string $title, string $content): bool
+    public function updatePost(int $id, string $title, string $content, ?string $imagePath): bool
     {
-        $stmt = $this->db->prepare("UPDATE posts SET title = ?, content = ? WHERE id = ?");
-        $stmt->bind_param("ssi", $title, $content, $id);
+        if ($imagePath !== null) {
+            $stmt = $this->db->prepare("UPDATE posts SET title = ?, content = ?, image_path = ? WHERE id = ?");
+            $stmt->bind_param("sssi", $title, $content, $imagePath, $id);
+        } else {
+            // Jeśli $imagePath jest null, nie zmienia obrazka w bazie
+            $stmt = $this->db->prepare("UPDATE posts SET title = ?, content = ? WHERE id = ?");
+            $stmt->bind_param("ssi", $title, $content, $id);
+        }
         return $stmt->execute();
     }
 

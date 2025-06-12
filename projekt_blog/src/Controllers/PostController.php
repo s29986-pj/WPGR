@@ -92,10 +92,28 @@ class PostController
         $title = $_POST['title'] ?? '';
         $content = $_POST['content'] ?? '';
         $userId = $_SESSION['user_id'];
+        $imagePath = null;
 
         $error = null;
         if (empty($title) || empty($content)) {
             $error = "Tytuł i treść posta są wymagane.";
+        }
+
+        // Obsługa uploadu obrazka
+        if (isset($_FILES['post_image']) && $_FILES['post_image']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = UPLOAD_DIR;
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+            $fileName = uniqid() . '-' . basename($_FILES['post_image']['name']);
+            $targetPath = $uploadDir . $fileName;
+
+            if (move_uploaded_file($_FILES['post_image']['tmp_name'], $targetPath)) {
+                // Ścieżka względna do użycia w HTML
+                $imagePath = 'uploads/images/' . $fileName;
+            } else {
+                $error = "Wystąpił błąd podczas przesyłania obrazka.";
+            }
         }
 
         if ($error) {
@@ -108,7 +126,7 @@ class PostController
             return;
         }
 
-        $postId = $this->postModel->createPost($userId, $title, $content);
+        $postId = $this->postModel->createPost($userId, $title, $content, $imagePath);
 
         if ($postId) {
             header('Location: ' . BASE_PATH . '/posts/' . $postId . '?status=added');
@@ -169,15 +187,40 @@ class PostController
 
         $existingPost = $this->postModel->getPostById($id);
 
-        if (!$existingPost || $existingPost['user_id'] !== $_SESSION['user_id']) {
+        if (!$existingPost || ($existingPost['user_id'] !== $_SESSION['user_id'] && ($_SESSION['user_role'] ?? '') !== 'admin')) {
             header('Location: ' . BASE_PATH . '/');
             exit();
         }
 
         $title = $_POST['title'] ?? '';
         $content = $_POST['content'] ?? '';
-
         $error = null;
+
+        $newImagePathForDb = null;
+
+        if (isset($_FILES['post_image']) && $_FILES['post_image']['error'] === UPLOAD_ERR_OK) {
+            
+            if (!empty($existingPost['image_path'])) {
+                $oldFilePath = __DIR__ . '/../../public/' . $existingPost['image_path'];
+                if (file_exists($oldFilePath)) {
+                    unlink($oldFilePath);
+                }
+            }
+
+            $uploadDir = UPLOAD_DIR;
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+            $fileName = uniqid() . '-' . basename($_FILES['post_image']['name']);
+            $targetPath = $uploadDir . $fileName;
+
+            if (move_uploaded_file($_FILES['post_image']['tmp_name'], $targetPath)) {
+                $newImagePathForDb = 'uploads/images/' . $fileName;
+            } else {
+                $error = "Wystąpił błąd podczas przesyłania nowego obrazka.";
+            }
+        }
+
         if (empty($title) || empty($content)) {
             $error = "Tytuł i treść posta są wymagane.";
         }
@@ -192,7 +235,7 @@ class PostController
             return;
         }
 
-        if ($this->postModel->updatePost($id, $title, $content)) {
+        if ($this->postModel->updatePost($id, $title, $content, $newImagePathForDb)) {
             header('Location: ' . BASE_PATH . '/posts/' . $id . '?status=updated');
             exit();
         } else {
@@ -222,9 +265,16 @@ class PostController
 
         $post = $this->postModel->getPostById($id);
 
-        if (!$post || $post['user_id'] !== $_SESSION['user_id']) {
+        if (!$post || $post['user_id'] !== $_SESSION['user_id'] && $_SESSION['user_role'] !== 'admin') {
             header('Location: ' . BASE_PATH . '/');
             exit();
+        }
+
+        if (!empty($post['image_path'])) {
+            $filePath = __DIR__ . '/../../public/' . $post['image_path'];
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
         }
 
         if ($this->postModel->deletePost($id)) {

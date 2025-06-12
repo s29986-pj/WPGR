@@ -2,9 +2,16 @@
 
     <?php if (!empty($post)): ?>
         <h1><?php echo htmlspecialchars($post['title']); ?></h1>
+
         <p class="post-meta">Dodano przez: <?php echo htmlspecialchars($post['username']); ?> | <?php echo htmlspecialchars(date('d.m.Y H:i', strtotime($post['created_at']))); ?></p>
         <?php if ($post['created_at'] !== $post['updated_at']): ?>
             <p class="post-meta">Ostatnia aktualizacja: <?php echo htmlspecialchars(date('d.m.Y H:i', strtotime($post['updated_at']))); ?></p>
+        <?php endif; ?>
+
+        <?php if (!empty($post['image_path'])): ?>
+            <div class="post-image-container" style="margin-bottom: 20px;">
+                <img src="<?php echo BASE_PATH . '/' . htmlspecialchars($post['image_path']); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" style="max-width: 100%; height: auto; border-radius: 8px;">
+            </div>
         <?php endif; ?>
 
         <div class="post-full-content">
