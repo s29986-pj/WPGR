@@ -294,4 +294,63 @@ class AuthController
             return;
         }
     }
+
+
+    public function showChangePasswordForm()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . BASE_PATH . '/login');
+            exit();
+        }
+
+        view('auth/change_password', ['pageTitle' => 'Zmień hasło']);
+    }
+
+    // Przetwarza formularz zmiany hasła
+    public function handleChangePassword()
+    {
+        if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_PATH . '/login');
+            exit();
+        }
+
+        $userId = $_SESSION['user_id'];
+        $currentPassword = $_POST['current_password'] ?? '';
+        $newPassword = $_POST['new_password'] ?? '';
+        $newPasswordConfirm = $_POST['new_password_confirm'] ?? '';
+        $error = null;
+
+        // Walidacja pól
+        if (empty($currentPassword) || empty($newPassword) || empty($newPasswordConfirm)) {
+            $error = "Wszystkie pola są wymagane.";
+        } elseif ($newPassword !== $newPasswordConfirm) {
+            $error = "Nowe hasła nie są zgodne.";
+        } elseif ($currentPassword == $newPassword) {
+            $error = "Nie możesz użyć tego samego hasła.";
+        }
+
+        if ($error) {
+            view('auth/change_password', ['pageTitle' => 'Zmień hasło', 'error' => $error]);
+            return;
+        }
+
+        // Weryfikacja aktualnego hasła
+        $user = $this->userModel->findById($userId);
+        if (!$user || !password_verify($currentPassword, $user['password_hash'])) {
+            $error = "Aktualne hasło jest nieprawidłowe.";
+            view('auth/change_password', ['pageTitle' => 'Zmień hasło', 'error' => $error]);
+            return;
+        }
+        
+        // Aktualizacja hasła
+        $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);
+        if ($this->userModel->updatePassword($userId, $newPasswordHash)) {
+            // Przekierowanie z komunikatem o sukcesie
+            header('Location: ' . BASE_PATH . '/?status=password_changed_success');
+            exit();
+        } else {
+            $error = "Wystąpił błąd podczas zmiany hasła. Spróbuj ponownie.";
+            view('auth/change_password', ['pageTitle' => 'Zmień hasło', 'error' => $error]);
+        }
+    }
 }

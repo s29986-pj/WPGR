@@ -42,8 +42,18 @@ class User
     // Znajduje użytkownika po nazwie
     public function findByUsername(string $username): ?array
     {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt = $this->db->prepare("SELECT id, username, email, password_hash, role, is_active FROM users WHERE username = ?");
         $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
+
+    // Znajduje użytkownika po jego ID
+    public function findById(int $id): ?array
+    {
+        $stmt = $this->db->prepare("SELECT id, username, email, password_hash, role, is_active FROM users WHERE id = ?");
+        $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_assoc();

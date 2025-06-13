@@ -158,7 +158,7 @@ class PostController
 
         $post = $this->postModel->getPostById($id);
 
-        if (!$post || $post['user_id'] !== $_SESSION['user_id']) {
+        if (!$post || ($post['user_id'] !== $_SESSION['user_id'] && ($_SESSION['user_role'] ?? '') !== 'admin')) {
             header('Location: ' . BASE_PATH . '/');
             exit();
         }

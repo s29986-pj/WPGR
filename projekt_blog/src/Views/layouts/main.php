@@ -27,6 +27,7 @@ $statusMessages = [
     'reset_link_sent_if_exists' => 'Jeśli podany adres e-mail istnieje w naszej bazie, link do resetowania hasła został wysłany.',
     'password_reset_success' => 'Twoje hasło zostało pomyślnie zresetowane. Możesz się teraz zalogować.',
     'email_verification_error' => 'Wystąpił błąd podczas weryfikacji e-maila. Spróbuj ponownie lub skontaktuj się z administratorem.',
+    'password_changed_success' => 'Twoje hasło zostało pomyślnie zmienione.',
 
     // Statusy z PostController
     'added' => 'Post został dodany pomyślnie.',
@@ -67,6 +68,12 @@ if (!empty($status_code) && isset($statusMessages[$status_code])) {
             <div class="nav-right">
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <span>Witaj, <?php echo htmlspecialchars($_SESSION['username']); ?>!</span>
+
+                    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                        <a href="<?php echo BASE_PATH; ?>/admin">Panel Admina</a>
+                    <?php endif; ?>
+
+                    <a href="<?php echo BASE_PATH; ?>/change-password">Zmień hasło</a>
                     <a href="<?php echo BASE_PATH; ?>/logout">Wyloguj</a>
                 <?php else: ?>
                     <a href="<?php echo BASE_PATH; ?>/login">Zaloguj</a>

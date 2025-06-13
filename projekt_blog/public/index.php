@@ -21,6 +21,7 @@ use App\Core\Router;
 use function App\Utils\view;
 use App\Controllers\AuthController;
 use App\Controllers\PostController;
+use App\Controllers\AdminController; 
 
 $router = new Router();
 $authController = new AuthController();
@@ -74,6 +75,10 @@ $router->add('/reset-password', function() {
 $router->add('/reset-password', [$authController, 'resetPassword'], 'POST');// POST - obsłuż reset
 
 
+// Zmiana hasła przez zalogowanego użytkownika
+$router->add('/change-password', [$authController, 'showChangePasswordForm']);
+$router->add('/change-password', [$authController, 'handleChangePassword'], 'POST');
+
 
 
 
@@ -98,6 +103,15 @@ $router->add('/posts/:id/delete', [$postController, 'delete'], 'POST');
 
 // Dodawanie komentarza
 $router->add('/posts/:id/comments', [$postController, 'addComment'], 'POST');
+
+
+
+// Panel admina
+$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+if (str_starts_with($requestUri, BASE_PATH . '/admin')) {
+    $adminController = new AdminController();
+    $router->add('/admin', [$adminController, 'dashboard']);
+}
 
 
 
