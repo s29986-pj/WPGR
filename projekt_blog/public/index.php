@@ -22,10 +22,13 @@ use function App\Utils\view;
 use App\Controllers\AuthController;
 use App\Controllers\PostController;
 use App\Controllers\AdminController; 
+use App\Controllers\ContactController;
+
 
 $router = new Router();
 $authController = new AuthController();
 $postController = new PostController();
+$contactController = new ContactController();
 
 
 // Strona główna
@@ -113,6 +116,12 @@ if (str_starts_with($requestUri, BASE_PATH . '/admin')) {
     $router->add('/admin', [$adminController, 'dashboard']);
     $router->add('/admin/manage-posts', [$adminController, 'managePosts']); 
 }
+
+
+
+// Kontakt
+$router->add('/contact', [$contactController, 'showContactForm']); // GET - wyświetl formularz
+$router->add('/contact', [$contactController, 'handleContactForm'], 'POST'); // POST - obsłuż
 
 
 
