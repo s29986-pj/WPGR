@@ -111,6 +111,7 @@ $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 if (str_starts_with($requestUri, BASE_PATH . '/admin')) {
     $adminController = new AdminController();
     $router->add('/admin', [$adminController, 'dashboard']);
+    $router->add('/admin/manage-posts', [$adminController, 'managePosts']); 
 }
 
 

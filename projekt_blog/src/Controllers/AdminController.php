@@ -3,9 +3,12 @@
 namespace App\Controllers;
 
 use function App\Utils\view;
+use App\Models\Post; 
 
 class AdminController
 {
+    
+
     public function __construct()
     {
         // Sprawdza, czy użytkownik jest zalogowany i czy jego rola to 'admin'
@@ -21,6 +24,27 @@ class AdminController
     {
         view('admin/dashboard', [
             'pageTitle' => 'Panel Administratora'
+        ]);
+    }
+
+    // Wyświetla listę wszystkich postów do zarządzania
+    public function managePosts()
+    {
+        $postModel = new Post();
+
+        $page = $_GET['page'] ?? 1;
+        $postsPerPage = 10;
+        $offset = ($page - 1) * $postsPerPage;
+
+        $posts = $postModel->getAllPosts($postsPerPage, $offset);
+        $totalPosts = $postModel->countAllPosts();
+        $totalPages = ceil($totalPosts / $postsPerPage);
+
+        view('admin/manage_posts', [
+            'pageTitle' => 'Zarządzaj Postami',
+            'posts' => $posts,
+            'currentPage' => $page,
+            'totalPages' => $totalPages
         ]);
     }
 }

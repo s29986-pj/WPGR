@@ -212,6 +212,25 @@ textarea {
 
 
 
+/* Przyciski */
+.edit-button {
+    background-color: #da2689;
+}
+
+.edit-button:hover {
+    background-color: #962a72;
+}
+
+.delete-button {
+    background-color: #dc3545;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+
+
 /* Style specyficzne dla pojedynczego posta */
 .single-post-container {
     padding: 20px;
@@ -245,7 +264,7 @@ textarea {
     text-align: right;
 }
 
-.post-actions-single .button {
+.button {
     padding: 8px 15px;
     border: none;
     border-radius: 5px;
@@ -255,22 +274,6 @@ textarea {
     font-size: 0.9em;
     display: inline-block;
     margin-left: 10px;
-}
-
-.post-actions-single .edit-button {
-    background-color: #da2689;
-}
-
-.post-actions-single .edit-button:hover {
-    background-color: #962a72;
-}
-
-.post-actions-single .delete-button {
-    background-color: #dc3545;
-}
-
-.post-actions-single .delete-button:hover {
-    background-color: #c82333;
 }
 
 
@@ -287,7 +290,7 @@ textarea {
     margin-bottom: 20px;
 }
 .add-post-link a {
-    background-color: #28a745;
+    background-color: #7828a7;
     color: white;
     padding: 8px 15px;
     border-radius: 5px;
@@ -295,7 +298,7 @@ textarea {
     transition: background-color 0.3s ease;
 }
 .add-post-link a:hover {
-    background-color: #218838;
+    background-color: #562188;
 }
 
 .post-item {
@@ -347,22 +350,6 @@ textarea {
     margin-left: 10px;
 }
 
-.post-actions .edit-button {
-    background-color: #da2689;
-}
-
-.post-actions .edit-button:hover {
-    background-color: #962a72;
-}
-
-.post-actions .delete-button {
-    background-color: #dc3545;
-}
-
-.post-actions .delete-button:hover {
-    background-color: #c82333;
-}
-
 .pagination {
     text-align: center;
     margin-top: 30px;
@@ -391,6 +378,7 @@ textarea {
 }
 
 
+
 /* Style dla komentarzy */
 .comments-section {
     margin-top: 40px;
@@ -409,4 +397,71 @@ textarea {
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 5px;
+}
+
+
+
+/* --- Style dla Panelu Administratora --- */
+
+.admin-panel-container ul {
+    list-style: none; 
+    padding: 0; 
+    margin-top: 20px;
+}
+
+.admin-panel-container a {
+    color: #da2689;
+    text-decoration: none;
+}
+
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 0.9em;
+}
+
+.admin-table th, 
+.admin-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.admin-table thead tr {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+
+/* Komórka z przyciskami akcji */
+.admin-table .actions-cell {
+    white-space: nowrap;
+    width: 1%;
+}
+
+.admin-table .actions-cell a {
+    color: #fff;
+}
+
+.admin-table .actions-cell form {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Dostosowanie przycisków w tabeli admina */
+.admin-table .actions-cell .button {
+    font-size: 0.85em;
+    padding: 5px 10px;
+    margin: 0 2px;
+}
+
+
+/* Link powrotny na dole strony panelu */
+.admin-back-link {
+    margin-top: 20px;
 }

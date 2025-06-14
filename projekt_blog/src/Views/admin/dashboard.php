@@ -1,5 +1,10 @@
 <div class="admin-panel-container">
     <h1>Witaj w Panelu Administratora</h1>
-    <p>To jest główny pulpit. W przyszłości znajdą się tutaj skróty do najważniejszych funkcji.</p>
-    
+    <p>Wybierz jedną z opcji, aby rozpocząć zarządzanie.</p>
+
+    <ul>
+        <li style="margin-bottom: 10px;">
+            <a href="<?php echo BASE_PATH; ?>/admin/manage-posts" style="font-size: 1.2em;">Zarządzaj Postami</a>
+        </li>
+    </ul>
 </div>
