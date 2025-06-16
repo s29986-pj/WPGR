@@ -97,7 +97,7 @@ if (!empty($status_code) && isset($statusMessages[$status_code])) {
     </main>
 
     <footer>
-        <p>&copy; <?php echo date('Y'); ?> <?php echo APP_NAME; ?>. Wszelkie prawa zastrzeżone.</p>
+        <p>&copy; <?php echo date('Y'); ?> <?php echo APP_NAME; ?> | Autor: <?php echo AUTHOR; ?></p>
     </footer>
 </body>
 </html>

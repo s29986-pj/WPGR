@@ -23,7 +23,8 @@ define('DB_PASS', $_ENV['DB_PASS'] ?? 'root');
 define('UPLOAD_DIR', __DIR__ . '/../public/uploads/images/');
 define('LOG_DIR', __DIR__ . '/../logs/');
 
-// Nazwa aplikacji
+// Nazwa aplikacji i autor
 define('APP_NAME', 'Projekt_Blog');
+define('AUTHOR', 's29986@pjwstk.edu.pl')
 
 ?>
