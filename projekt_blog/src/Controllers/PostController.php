@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Post;
 use App\Models\Comment;
+use App\Core\AppLogger;
 use function App\Utils\view;
 
 class PostController
@@ -134,6 +135,9 @@ class PostController
         $postId = $this->postModel->createPost($userId, $title, $content, $imagePath);
 
         if ($postId) {
+            // Zapis do logów
+            AppLogger::log('INFO', 'Post created', ['user_id' => $userId, 'post_id' => $postId, 'title' => $title]);
+
             header('Location: ' . BASE_PATH . '/posts/' . $postId . '?status=added');
             exit();
         } else {
@@ -241,6 +245,9 @@ class PostController
         }
 
         if ($this->postModel->updatePost($id, $title, $content, $newImagePathForDb)) {
+            // Zapis do logów
+            AppLogger::log('INFO', 'Post updated', ['user_id' => $_SESSION['user_id'], 'post_id' => $id, 'title' => $title]);
+
             header('Location: ' . BASE_PATH . '/posts/' . $id . '?status=updated');
             exit();
         } else {
@@ -282,8 +289,17 @@ class PostController
             }
         }
 
+        // Zapis do logów
+        AppLogger::log('WARNING', 'Post deleted', ['user_id' => $_SESSION['user_id'], 'post_id' => $id, 'title' => $post['title']]);
+
         if ($this->postModel->deletePost($id)) {
-            header('Location: ' . BASE_PATH . '/?status=deleted');
+            $redirectUrl = BASE_PATH . '/?status=deleted'; // Domyślne przekierowanie
+
+            if (isset($_SERVER['HTTP_REFERER']) && str_contains($_SERVER['HTTP_REFERER'], '/admin/manage-posts')) {
+                $redirectUrl = BASE_PATH . '/admin/manage-posts?status=deleted';
+            }
+
+            header('Location: ' . $redirectUrl);
             exit();
         } else {
             header('Location: ' . BASE_PATH . '/posts/' . $id . '?status=delete_error');

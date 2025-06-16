@@ -494,3 +494,24 @@ textarea {
 .admin-back-link {
     margin-top: 20px;
 }
+
+
+/* Kontener na logi w panelu admina */
+.log-container {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 5px;
+    max-height: 600px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.log-container pre {
+    margin: 0;
+    font-family: Consolas;
+    font-size: 0.9em;
+    color: #333;
+}

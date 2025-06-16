@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\User;
 use App\Core\Mailer;
+use App\Core\AppLogger;
 use function App\Utils\view;
 
 class AuthController
@@ -61,6 +62,9 @@ class AuthController
             $userId = $this->userModel->create($username, $email, $passwordHash, $verificationToken);
 
             if ($userId) {
+                // Zapis do logów
+                AppLogger::log('INFO', 'User account created', ['user_id' => $userId, 'username' => $username, 'email' => $email]);
+                
                 // Treść e-maila z linkiem aktywacyjnym
                 $activationLink = "http://" . $_SERVER['HTTP_HOST'] . BASE_PATH . "/verify-email?token=" . $verificationToken;
                 
@@ -132,6 +136,9 @@ class AuthController
             $_SESSION['user_role'] = $user['role'];
             $_SESSION['username'] = $user['username'];
 
+            //Zapisuje do logów
+            AppLogger::log('INFO', 'User logged in', ['user_id' => $user['id'], 'email' => $email]);
+
             // Obsługa "Zapamiętaj mnie" (ciasteczka).
             if ($remember_me) {
                 $selector = bin2hex(random_bytes(16));
@@ -155,6 +162,9 @@ class AuthController
 
     public function logout()
     {
+        //Zapisuje do logów
+        AppLogger::log('INFO', 'User logged out', ['user_id' => $_SESSION['user_id']]);
+
         // Zakończenie sesji.
         session_unset();
         session_destroy();
@@ -276,6 +286,9 @@ class AuthController
 
                     // Aktualizacja hasła
                     if ($this->userModel->updatePassword($user['id'], $newPasswordHash)) {
+                        // Zapis do logów
+                        AppLogger::log('SECURITY', 'User changed their password', ['user_id' => $user['id']]);
+
                         $success = "Twoje hasło zostało pomyślnie zresetowane. Możesz się teraz zalogować.";
                         header("Location: " . BASE_PATH . "/login?status=password_reset_success");
                         exit();
@@ -345,6 +358,9 @@ class AuthController
         // Aktualizacja hasła
         $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);
         if ($this->userModel->updatePassword($userId, $newPasswordHash)) {
+            // Zapisuje do logów
+            AppLogger::log('SECURITY', 'User changed their password', ['user_id' => $userId]);
+            
             // Przekierowanie z komunikatem o sukcesie
             header('Location: ' . BASE_PATH . '/?status=password_changed_success');
             exit();

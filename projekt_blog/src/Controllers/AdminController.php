@@ -47,4 +47,46 @@ class AdminController
             'totalPages' => $totalPages
         ]);
     }
+
+    // Wyświetla logi formularza kontaktowego
+    public function viewContactLogs()
+    {
+        $logFile = LOG_DIR . 'contact_messages.log';
+        $logContent = '';
+
+        if (file_exists($logFile)) {
+            $logContent = file_get_contents($logFile);
+        } else {
+            $logContent = 'Plik logów (contact_messages.log) nie został jeszcze utworzony lub jest pusty.';
+        }
+
+        view('admin/view_logs', [
+            'pageTitle' => 'Logi Formularza Kontaktowego',
+            'logTitle' => 'Logi Formularza Kontaktowego',
+            'logDescription' => 'Poniżej znajduje się lista logów z pliku',
+            'logFileName' => 'contact_messages.log',
+            'logContent' => $logContent
+        ]);
+    }
+
+    // Wyświetla logi zdarzeń aplikacji
+    public function viewAppLogs()
+    {
+        $logFile = LOG_DIR . 'app.log';
+        $logContent = '';
+
+        if (file_exists($logFile)) {
+            $logContent = file_get_contents($logFile);
+        } else {
+            $logContent = 'Plik logów aplikacji (app.log) jest pusty.';
+        }
+
+        view('admin/view_logs', [
+            'pageTitle' => 'Logi Aplikacji',
+            'logTitle' => 'Logi Zdarzeń Aplikacji',
+            'logDescription' => 'Poniżej znajduje się lista zdarzeń zarejestrowanych w aplikacji z pliku',
+            'logFileName' => 'app_events.log',
+            'logContent' => $logContent
+        ]);
+    }
 }

@@ -46,6 +46,9 @@ class ContactController
         }
 
         // Zapis wiadomości do pliku
+        if (!is_dir(LOG_DIR)) {
+            mkdir(LOG_DIR, 0775, true);
+        }
         $logFile = LOG_DIR . 'contact_messages.log';
         $logEntry = "[" . date('Y-m-d H:i:s') . "] From: $name <$email> | Subject: $subject\nMessage: $message\n---\n";
         file_put_contents($logFile, $logEntry, FILE_APPEND);
