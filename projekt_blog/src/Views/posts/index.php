@@ -20,14 +20,6 @@
                     }
                     ?>
                 </div>
-                <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] === $post['user_id']): ?>
-                    <div class="post-actions">
-                        <a href="<?php echo BASE_PATH; ?>/posts/<?php echo htmlspecialchars($post['id']); ?>/edit" class="button edit-button">Edytuj</a>
-                        <form action="<?php echo BASE_PATH; ?>/posts/<?php echo htmlspecialchars($post['id']); ?>/delete" method="POST" style="display:inline-block;">
-                            <button type="submit" class="button delete-button" onclick="return confirm('Czy na pewno chcesz usunąć ten post?');">Usuń</button>
-                        </form>
-                    </div>
-                <?php endif; ?>
             </div>
         <?php endforeach; ?>
 
