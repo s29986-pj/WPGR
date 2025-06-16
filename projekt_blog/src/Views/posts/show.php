@@ -32,6 +32,24 @@
     <?php endif; ?>
 
 
+    <div class="post-navigation">
+        <div class="prev-post">
+            <?php if ($previousPost): ?>
+                <a href="<?php echo BASE_PATH; ?>/posts/<?php echo $previousPost['id']; ?>">
+                    &larr; Poprzedni wpis
+                </a>
+            <?php endif; ?>
+        </div>
+        <div class="next-post">
+                <?php if ($nextPost): ?>
+                <a href="<?php echo BASE_PATH; ?>/posts/<?php echo $nextPost['id']; ?>">
+                    Następny wpis &rarr;
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+
+
     <hr style="margin: 40px 0;">
 
     <div id="comments" class="comments-section">

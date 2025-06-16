@@ -278,6 +278,35 @@ textarea {
 
 
 
+/* --- Nawigacja między postami --- */
+.post-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.post-navigation a {
+    text-decoration: none;
+    color: #da2689;
+    font-weight: bold;
+}
+
+.post-navigation a:hover {
+    text-decoration: underline;
+}
+
+.post-navigation .prev-post {
+    text-align: left;
+}
+
+.post-navigation .next-post {
+    text-align: right;
+}
+
+
+
 /* Style specyficzne dla listy postów */
 .posts-list-container {
     padding: 20px;

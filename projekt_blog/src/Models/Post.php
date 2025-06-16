@@ -77,4 +77,32 @@ class Post
         $result = $this->db->query("SELECT COUNT(*) FROM posts");
         return $result->fetch_row()[0]; 
     }
+
+
+    //  Znajduje następny post na podstawie daty publikacji
+    public function getNextPost(string $currentPostDate): ?array
+    {
+        // Szuka posta z najbliższą datą, ale wcześniejszą niż aktualna
+        $stmt = $this->db->prepare(
+            "SELECT id FROM posts WHERE created_at < ? ORDER BY created_at DESC LIMIT 1"
+        );
+        $stmt->bind_param("s", $currentPostDate);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
+
+
+    // Znajduje poprzedni post na podstawie daty publikacji
+    public function getPreviousPost(string $currentPostDate): ?array
+    {
+        // Szuka posta z najbliższą datą, ale późniejszą niż aktualna
+        $stmt = $this->db->prepare(
+            "SELECT id FROM posts WHERE created_at > ? ORDER BY created_at ASC LIMIT 1"
+        );
+        $stmt->bind_param("s", $currentPostDate);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
 }

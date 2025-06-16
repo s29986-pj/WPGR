@@ -57,10 +57,15 @@ class PostController
 
         $comments = $this->commentModel->findByPostId($id); 
 
+        $previousPost = $this->postModel->getPreviousPost($post['created_at']);
+        $nextPost = $this->postModel->getNextPost($post['created_at']);
+
         view('posts/show', [
             'pageTitle' => $post['title'],
             'post' => $post,
-            'comments' => $comments
+            'comments' => $comments,
+            'previousPost' => $previousPost,
+            'nextPost' => $nextPost
         ]);
     }
 
