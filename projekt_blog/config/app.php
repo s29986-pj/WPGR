@@ -25,6 +25,6 @@ define('LOG_DIR', __DIR__ . '/../logs/');
 
 // Nazwa aplikacji i autor
 define('APP_NAME', 'Projekt_Blog');
-define('AUTHOR', 's29986@pjwstk.edu.pl')
+define('AUTHOR', 's29986');
 
 ?>
