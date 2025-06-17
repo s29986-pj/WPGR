@@ -22,8 +22,8 @@
                         <td><?php echo htmlspecialchars(date('d.m.Y H:i', strtotime($post['created_at']))); ?></td>
                         <td class="actions-cell">
                             <a href="<?php echo BASE_PATH; ?>/posts/<?php echo htmlspecialchars($post['id']); ?>/edit" class="button edit-button">Edytuj</a>
-                            <form action="<?php echo BASE_PATH; ?>/posts/<?php echo htmlspecialchars($post['id']); ?>/delete" method="POST">
-                                <button type="submit" class="button delete-button" onclick="return confirm('Czy na pewno chcesz usunąć ten post?');">Usuń</button>
+                            <form action="<?php echo BASE_PATH; ?>/posts/<?php echo htmlspecialchars($post['id']); ?>/delete" method="POST" class="form-delete">
+                                <button type="submit" class="button delete-button">Usuń</button>
                             </form>
                         </td>
                     </tr>

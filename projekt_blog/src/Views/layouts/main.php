@@ -99,5 +99,7 @@ if (!empty($status_code) && isset($statusMessages[$status_code])) {
     <footer>
         <p>&copy; <?php echo date('Y'); ?> <?php echo APP_NAME; ?> | Autor: <?php echo AUTHOR; ?></p>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="<?php echo BASE_PATH; ?>/js/main.js"></script>
 </body>
 </html>
