@@ -21,7 +21,7 @@
                         <td><?php echo htmlspecialchars($post['username']); ?></td>
                         <td><?php echo htmlspecialchars(date('d.m.Y H:i', strtotime($post['created_at']))); ?></td>
                         <td class="actions-cell">
-                            <a href="<?php echo BASE_PATH; ?>/posts/<?php echo htmlspecialchars($post['id']); ?>/edit" class="button edit-button">Edytuj</a>
+                            <a href="<?php echo BASE_PATH; ?>/posts/<?php echo htmlspecialchars($post['id']); ?>/edit?from=admin" class="button edit-button">Edytuj</a>
                             <form action="<?php echo BASE_PATH; ?>/posts/<?php echo htmlspecialchars($post['id']); ?>/delete" method="POST" class="form-delete">
                                 <button type="submit" class="button delete-button">Usuń</button>
                             </form>

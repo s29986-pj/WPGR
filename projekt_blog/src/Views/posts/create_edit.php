@@ -13,6 +13,13 @@ $form_action = BASE_PATH . ($isEditing ? '/posts/' . htmlspecialchars($post['id'
     <?php endif; ?>
 
     <form action="<?php echo $form_action; ?>" method="POST" enctype="multipart/form-data">
+        <?php
+        // Jeśli w adresie URL jest parametr 'from=admin', dodaje ukryte pole,
+        // które zostanie wysłane razem z formularzem.
+        if (isset($_GET['from']) && $_GET['from'] === 'admin'): ?>
+            <input type="hidden" name="source" value="admin">
+        <?php endif; ?>
+
         <div class="form-group">
             <label for="title">Tytuł:</label>
             <input type="text" id="title" name="title" value="<?php echo $title_value; ?>" required>

@@ -204,7 +204,6 @@ class PostController
         $title = $_POST['title'] ?? '';
         $content = $_POST['content'] ?? '';
         $error = null;
-
         $newImagePathForDb = null;
 
         if (isset($_FILES['post_image']) && $_FILES['post_image']['error'] === UPLOAD_ERR_OK) {
@@ -218,7 +217,7 @@ class PostController
 
             $uploadDir = UPLOAD_DIR;
             if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
+                mkdir($uploadDir, 0775, true);
             }
             $fileName = uniqid() . '-' . basename($_FILES['post_image']['name']);
             $targetPath = $uploadDir . $fileName;
@@ -248,7 +247,14 @@ class PostController
             // Zapis do logów
             AppLogger::log('INFO', 'Post updated', ['user_id' => $_SESSION['user_id'], 'post_id' => $id, 'title' => $title]);
 
-            header('Location: ' . BASE_PATH . '/posts/' . $id . '?status=updated');
+            $redirectUrl = BASE_PATH . '/posts/' . $id . '?status=updated'; // Domyślnie
+
+            // Sprawdza, czy formularz został wysłany ze źródłem 'admin'
+            if (isset($_POST['source']) && $_POST['source'] === 'admin') {
+                $redirectUrl = BASE_PATH . '/admin/manage-posts?status=updated';
+            }
+
+            header('Location: ' . $redirectUrl);
             exit();
         } else {
             view('posts/create_edit', [
