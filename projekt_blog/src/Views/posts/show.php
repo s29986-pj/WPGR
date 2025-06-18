@@ -12,8 +12,8 @@
         <?php endif; ?>
 
         <?php if (!empty($post['image_path'])): ?>
-            <div class="post-image-container" style="margin-bottom: 20px;">
-                <img src="<?php echo BASE_PATH . '/' . htmlspecialchars($post['image_path']); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" style="max-width: 100%; height: auto; border-radius: 8px;">
+            <div class="post-image-container">
+                <img src="<?php echo BASE_PATH . '/' . htmlspecialchars($post['image_path']); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>">
             </div>
         <?php endif; ?>
 
@@ -23,7 +23,7 @@
 
         <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] === $post['user_id']): ?>
             <div class="post-actions-single">
-                <a href="<?php echo BASE_PATH; ?>/posts/<?php echo htmlspecialchars($post['id']); ?>/edit" class="button edit-button" style="color: #fff;">Edytuj</a>
+                <a href="<?php echo BASE_PATH; ?>/posts/<?php echo htmlspecialchars($post['id']); ?>/edit" class="button edit-button">Edytuj</a>
                 <form action="<?php echo BASE_PATH; ?>/posts/<?php echo htmlspecialchars($post['id']); ?>/delete" method="POST" class="form-delete">
                     <button type="submit" class="button delete-button">Usuń</button>
                 </form>
@@ -59,7 +59,7 @@
     </div>
 
 
-    <hr style="margin: 40px 0;">
+    <hr class="post-divider">
 
     <div id="comments" class="comments-section">
 
@@ -85,7 +85,7 @@
                         <p><strong>
                             <?php echo htmlspecialchars($comment['author_name']); ?>
                         </strong></p>
-                        <p style="font-size: 0.8em; color: #777;">
+                        <p class="comment-meta">
                             <?php echo htmlspecialchars(date('d.m.Y H:i', strtotime($comment['created_at']))); ?>
                         </p>
                         <p><?php echo nl2br(htmlspecialchars($comment['content'])); ?></p>
