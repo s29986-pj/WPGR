@@ -59,6 +59,42 @@ class User
         return $result->fetch_assoc();
     }
 
+    // Pobiera wszystkich użytkowników z bazy z paginacją
+    public function getAllUsers(int $currentAdminId, int $limit = 10, int $offset = 0): array
+    {
+        $stmt = $this->db->prepare("SELECT id, username, email, role, is_active, created_at FROM users WHERE id != ? ORDER BY created_at DESC LIMIT ? OFFSET ?");
+        $stmt->bind_param("iii", $currentAdminId, $limit, $offset);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    // Zlicza wszystkich użytkowników (oprócz admina)
+    public function countAllUsers(int $currentAdminId): int
+    {
+        $stmt = $this->db->prepare("SELECT COUNT(id) as total FROM users WHERE id != ?");
+        $stmt->bind_param("i", $currentAdminId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc()['total'];
+    }
+
+    // Zmienia rolę użytkownika
+    public function updateUserRole(int $userId, string $newRole): bool
+    {
+        $stmt = $this->db->prepare("UPDATE users SET role = ? WHERE id = ?");
+        $stmt->bind_param("si", $newRole, $userId);
+        return $stmt->execute();
+    }
+
+    // Usuwa użytkownika z bazy danych
+    public function deleteUser(int $userId): bool
+    {
+        $stmt = $this->db->prepare("DELETE FROM users WHERE id = ?");
+        $stmt->bind_param("i", $userId);
+        return $stmt->execute();
+    }
+
     // Znajduje użytkownika po tokenie weryfikacyjnym
     public function findByVerificationToken(string $token): ?array
     {

@@ -74,8 +74,10 @@ class PostController
     // Wyświetla formularz dodawania nowego posta
     public function createForm()
     {
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . BASE_PATH . '/login?status=not_logged_in_post');
+        // Sprawdza, czy użytkownik jest zalogowany ORAZ czy ma rolę 'author' lub 'admin'
+        if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['author', 'admin'])) {
+            // Przekierowanie na stronę główną z błędem braku uprawnień
+            header('Location: ' . BASE_PATH . '/?status=permission_denied');
             exit();
         }
 
@@ -90,7 +92,7 @@ class PostController
     // Obsługuje dodawanie nowego posta
     public function store()
     {
-        if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+        if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['author', 'admin']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . BASE_PATH . '/');
             exit();
         }

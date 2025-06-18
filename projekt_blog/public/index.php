@@ -115,6 +115,8 @@ if (str_starts_with($requestUri, BASE_PATH . '/admin')) {
     $adminController = new AdminController();
     $router->add('/admin', [$adminController, 'dashboard']);
     $router->add('/admin/manage-posts', [$adminController, 'managePosts']);
+    $router->add('/admin/manage-users', [$adminController, 'manageUsers']);
+    $router->add('/admin/process-user-action', [$adminController, 'processUserAction'], 'POST'); 
     $router->add('/admin/contact-logs', [$adminController, 'viewContactLogs']);
     $router->add('/admin/app-logs', [$adminController, 'viewAppLogs']); 
 }

@@ -1,7 +1,7 @@
 <div class="posts-list-container">
     <h1>Najnowsze wpisy</h1>
 
-    <?php if (isset($_SESSION['user_id'])): ?>
+    <?php if (isset($_SESSION['user_id']) && in_array($_SESSION['user_role'], ['author', 'admin'])): ?>
         <p class="add-post-link"><a href="<?php echo BASE_PATH; ?>/posts/create">Dodaj nowy post</a></p>
     <?php endif; ?>
 

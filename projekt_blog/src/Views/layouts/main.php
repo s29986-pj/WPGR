@@ -8,7 +8,9 @@ $errorStatusCodes = [
     'reset_link_fail',
     'email_verification_error',
     'delete_error',
-    'comment_error'
+    'comment_error',
+    'delete_self_error',
+    'permission_denied'
 ];
 
 // Mapowanie kodów statusu na wiadomości
@@ -35,7 +37,13 @@ $statusMessages = [
     'deleted' => 'Post został usunięty pomyślnie.',
     'delete_error' => 'Wystąpił błąd podczas usuwania posta.',
     'comment_added' => 'Komentarz został dodany pomyślnie.',
-    'comment_error' => 'Wystąpił błąd podczas dodawania komentarza.'   
+    'comment_error' => 'Wystąpił błąd podczas dodawania komentarza.',
+    'permission_denied' => 'Nie masz uprawnień, aby uzyskać dostęp do tej strony.',
+    
+    // Statusy z AdminController (User Management)
+    'role_changed' => 'Rola użytkownika została pomyślnie zmieniona.',
+    'user_deleted' => 'Konto użytkownika zostało usunięte.',
+    'delete_self_error' => 'Błąd: Nie możesz usunąć własnego konta.'
 ];
 
 // Pobieranie kodu statusu z URL-a

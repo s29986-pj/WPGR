@@ -3,7 +3,9 @@
 namespace App\Controllers;
 
 use function App\Utils\view;
-use App\Models\Post; 
+use App\Models\Post;
+use App\Models\User; 
+use App\Core\AppLogger; 
 
 class AdminController
 {
@@ -88,5 +90,79 @@ class AdminController
             'logFileName' => 'app_events.log',
             'logContent' => $logContent
         ]);
+    }
+
+    // Wyświetla listę użytkowników do zarządzania
+    public function manageUsers()
+    {
+        $userModel = new User();
+        $currentAdminId = $_SESSION['user_id'];
+
+        $page = $_GET['page'] ?? 1;
+        $usersPerPage = 10;
+        $offset = ($page - 1) * $usersPerPage;
+
+        $users = $userModel->getAllUsers($currentAdminId, $usersPerPage, $offset);
+        $totalUsers = $userModel->countAllUsers($currentAdminId);
+        $totalPages = ceil($totalUsers / $usersPerPage);
+
+        view('admin/manage_users', [
+            'pageTitle' => 'Zarządzaj Użytkownikami',
+            'users' => $users,
+            'currentPage' => $page,
+            'totalPages' => $totalPages
+        ]);
+    }
+
+    //  Przetwarza akcje na użytkownikach (zmiana roli, usunięcie)
+    public function processUserAction()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_PATH . '/admin/manage-users');
+            exit();
+        }
+
+        $userModel = new User();
+        $userId = $_POST['user_id'] ?? null;
+        $action = $_POST['action'] ?? null;
+        $adminId = $_SESSION['user_id'];
+
+        if ($action === 'change_role') {
+            $newRole = $_POST['role'] ?? 'user';
+            $allowedRoles = ['user', 'author', 'admin'];
+
+            // Zmienia rolę tylko jeśli jest na liście dozwolonych
+            if (in_array($newRole, $allowedRoles)) {
+                if ($userModel->updateUserRole($userId, $newRole)) {
+                    AppLogger::log('SECURITY', 'User role changed', [
+                        'admin_id' => $adminId, 
+                        'target_user_id' => $userId, 
+                        'new_role' => $newRole
+                    ]);
+                }
+            }
+            header('Location: ' . BASE_PATH . '/admin/manage-users?status=role_changed');
+            exit();
+        }
+
+        if ($action === 'delete_user') {
+            // Dodatkowe zabezpieczenie: nie można usunąć samego siebie
+            if ($userId == $adminId) {
+                header('Location: ' . BASE_PATH . '/admin/manage-users?status=delete_self_error');
+                exit();
+            }
+
+            if ($userModel->deleteUser($userId)) {
+                AppLogger::log('SECURITY', 'User account deleted', [
+                    'admin_id' => $adminId, 
+                    'deleted_user_id' => $userId
+                ]);
+            }
+            header('Location: ' . BASE_PATH . '/admin/manage-users?status=user_deleted');
+            exit();
+        }
+
+        header('Location: ' . BASE_PATH . '/admin/manage-users');
+        exit();
     }
 }
