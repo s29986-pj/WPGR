@@ -27,7 +27,7 @@ class Post
     // Pobiera pojedynczy post po ID
     public function getPostById(int $id)
     {
-        $stmt = $this->db->prepare("SELECT p.*, u.username FROM posts p JOIN users u ON p.user_id = u.id WHERE p.id = ?");
+        $stmt = $this->db->prepare("SELECT p.*, u.username, u.email as author_email FROM posts p JOIN users u ON p.user_id = u.id WHERE p.id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();

@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Post;
 use App\Models\Comment;
 use App\Core\AppLogger;
+use App\Core\Mailer;
 use function App\Utils\view;
 
 class PostController
@@ -111,7 +112,7 @@ class PostController
         if (isset($_FILES['post_image']) && $_FILES['post_image']['error'] === UPLOAD_ERR_OK) {
             $uploadDir = UPLOAD_DIR;
             if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
+                mkdir($uploadDir, 0775, true);
             }
             $fileName = uniqid() . '-' . basename($_FILES['post_image']['name']);
             $targetPath = $uploadDir . $fileName;
@@ -348,6 +349,76 @@ class PostController
         } else {
             header('Location: ' . BASE_PATH . '/posts/' . $postId . '?status=comment_error');
             exit();
+        }
+    }
+
+
+    // Wyświetla formularz kontaktowy do autora konkretnego posta
+    public function showPostContactForm(array $params)
+    {
+        $id = $params['id'] ?? null;
+        $post = $this->postModel->getPostById($id);
+
+        if (!$post) {
+            header('Location: ' . BASE_PATH . '/');
+            exit();
+        }
+
+        view('contact/contact', [
+            'pageTitle' => 'Kontakt z autorem: ' . htmlspecialchars($post['username']),
+            'post' => $post
+        ]);
+    }
+
+    // Przetwarza formularz kontaktowy i wysyła e-mail do autora posta
+    public function handlePostContactForm(array $params)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_PATH . '/');
+            exit();
+        }
+
+        $id = $params['id'] ?? null;
+        $post = $this->postModel->getPostById($id);
+
+        if (!$post) {
+            header('Location: ' . BASE_PATH . '/');
+            exit();
+        }
+
+        $name = $_POST['name'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $message = $_POST['message'] ?? '';
+        $subject = "Wiadomość dotycząca Twojego posta: '" . $post['title'] . "'";
+
+        // Walidacja
+        $error = null;
+        if (empty($name) || empty($email) || empty($message)) {
+            $error = 'Pola Imię, E-mail i Wiadomość są wymagane.';
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error = 'Proszę podać poprawny adres e-mail.';
+        }
+
+        if ($error) {
+            view('contact/contact', ['pageTitle' => 'Kontakt z autorem', 'error' => $error, 'post' => $post, 'post_data' => $_POST]);
+            return;
+        }
+
+        // Zapis do pliku logu
+        $logFile = LOG_DIR . 'contact_messages.log';
+        $logEntry = "[" . date('Y-m-d H:i:s') . "] To: " . $post['author_email'] . " | From: $name <$email>\nSubject: $subject\nMessage: $message\n---\n";
+        file_put_contents($logFile, $logEntry, FILE_APPEND);
+
+        // Wysłanie e-maila
+        $mailer = new Mailer();
+        $emailSent = $mailer->sendEmail($post['author_email'], $subject, "Wiadomość od: $name ($email)<br><br>" . nl2br(htmlspecialchars($message)));
+
+        if ($emailSent) {
+            $success = 'Wiadomość do autora została wysłana!';
+            view('contact/contact', ['pageTitle' => 'Wiadomość wysłana', 'success' => $success, 'post' => $post]);
+        } else {
+            $error = 'Wystąpił błąd podczas wysyłania wiadomości.';
+            view('contact/contact', ['pageTitle' => 'Kontakt z autorem', 'error' => $error, 'post' => $post, 'post_data' => $_POST]);
         }
     }
 }

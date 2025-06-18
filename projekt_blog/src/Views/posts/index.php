@@ -11,15 +11,11 @@
                 <h2><a href="<?php echo BASE_PATH; ?>/posts/<?php echo htmlspecialchars($post['id']); ?>"><?php echo htmlspecialchars($post['title']); ?></a></h2>
                 <p class="post-meta">Dodano przez: <?php echo htmlspecialchars($post['username']); ?> | <?php echo htmlspecialchars(date('d.m.Y H:i', strtotime($post['created_at']))); ?></p>
                 <div class="post-content-excerpt">
-                    <?php
-                    // Wyświetla tylko fragment treści
-                    $excerpt = substr(strip_tags($post['content']), 0, 100); // 100 znaków bez HTML
-                    echo nl2br(htmlspecialchars($excerpt));
-                    if (strlen(strip_tags($post['content'])) > 100) {
-                        echo '... <a href="' . BASE_PATH . '/posts/' . htmlspecialchars($post['id']) . '">Czytaj więcej</a>';
-                    }
+                    <?php 
+                        echo nl2br(htmlspecialchars(strip_tags($post['content']))); 
                     ?>
                 </div>
+                <a href="<?php echo BASE_PATH; ?>/posts/<?php echo htmlspecialchars($post['id']); ?>" class="read-more-link">Czytaj więcej &rarr;</a>
             </div>
         <?php endforeach; ?>
 

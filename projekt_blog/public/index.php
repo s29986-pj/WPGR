@@ -22,13 +22,11 @@ use function App\Utils\view;
 use App\Controllers\AuthController;
 use App\Controllers\PostController;
 use App\Controllers\AdminController; 
-use App\Controllers\ContactController;
 
 
 $router = new Router();
 $authController = new AuthController();
 $postController = new PostController();
-$contactController = new ContactController();
 
 
 // Strona główna
@@ -109,6 +107,12 @@ $router->add('/posts/:id/comments', [$postController, 'addComment'], 'POST');
 
 
 
+// Kontakt z autorem konkretnego posta
+$router->add('/posts/:id/contact', [$postController, 'showPostContactForm']);
+$router->add('/posts/:id/contact', [$postController, 'handlePostContactForm'], 'POST');
+
+
+
 // Panel admina
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 if (str_starts_with($requestUri, BASE_PATH . '/admin')) {
@@ -120,12 +124,6 @@ if (str_starts_with($requestUri, BASE_PATH . '/admin')) {
     $router->add('/admin/contact-logs', [$adminController, 'viewContactLogs']);
     $router->add('/admin/app-logs', [$adminController, 'viewAppLogs']); 
 }
-
-
-
-// Kontakt
-$router->add('/contact', [$contactController, 'showContactForm']); // GET - wyświetl formularz
-$router->add('/contact', [$contactController, 'handleContactForm'], 'POST'); // POST - obsłuż
 
 
 

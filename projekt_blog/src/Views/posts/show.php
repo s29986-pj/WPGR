@@ -3,7 +3,10 @@
     <?php if (!empty($post)): ?>
         <h1><?php echo htmlspecialchars($post['title']); ?></h1>
 
-        <p class="post-meta">Dodano przez: <?php echo htmlspecialchars($post['username']); ?> | <?php echo htmlspecialchars(date('d.m.Y H:i', strtotime($post['created_at']))); ?></p>
+        <p class="post-meta">
+            Dodano przez: <?php echo htmlspecialchars($post['username']); ?>
+            | <?php echo htmlspecialchars(date('d.m.Y H:i', strtotime($post['created_at']))); ?>
+        </p>
         <?php if ($post['created_at'] !== $post['updated_at']): ?>
             <p class="post-meta">Ostatnia aktualizacja: <?php echo htmlspecialchars(date('d.m.Y H:i', strtotime($post['updated_at']))); ?></p>
         <?php endif; ?>
@@ -47,6 +50,12 @@
                 </a>
             <?php endif; ?>
         </div>
+    </div>
+
+    <div class="contact-author-button-container">
+        <a href="<?php echo BASE_PATH; ?>/posts/<?php echo $post['id']; ?>/contact" class="button edit-button">
+            Skontaktuj się z autorem
+        </a>
     </div>
 
 

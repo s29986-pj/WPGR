@@ -72,7 +72,6 @@ if (!empty($status_code) && isset($statusMessages[$status_code])) {
         <nav>
             <div class="nav-left">
                 <a href="<?php echo BASE_PATH; ?>/">Strona główna</a>
-                <a href="<?php echo BASE_PATH; ?>/contact">Kontakt</a> </div>
             </div>
             <div class="nav-right">
                 <?php if (isset($_SESSION['user_id'])): ?>
